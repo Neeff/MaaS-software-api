@@ -1,4 +1,11 @@
 class AvailableHour < ApplicationRecord
+  validates :description,
+            :start_hour,
+            :end_hour,
+            :date,
+            :week,
+            presence: true
+
   belongs_to :service
   has_many :engineer_available_hours
   has_many :engineers, through: :engineer_available_hours
@@ -6,6 +13,7 @@ class AvailableHour < ApplicationRecord
   def self.allowed_parameters
     %i[engineer_id available_hour_id active]
   end
+
   def self.generate_available_hours(structure)
     AvailableHour.import(structure, validate: false)
   end
