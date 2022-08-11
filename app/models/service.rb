@@ -1,5 +1,5 @@
 class Service < ApplicationRecord
-  validate :number_of_assigned_engineers
+  validates :company_name, presence: true
 
   has_one :contract, dependent: :destroy
   has_many :engineers, dependent: :destroy
@@ -15,11 +15,5 @@ class Service < ApplicationRecord
 
   def associate_contract
     FactoryBot.create(:contract, :all_days, service_id: id)
-  end
-
-  private
-
-  def number_of_assigned_engineers
-    errors.add(:engineers, 'must associate at least one engineer and a maximum of three') if engineers.empty? || engineers.size > 3
   end
 end

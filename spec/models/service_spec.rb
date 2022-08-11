@@ -1,12 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Service, type: :model do
-  describe 'validations' do
-    context 'when number of assigned engineers is less than 1 and greater than 3' do
-      let(:service) { FactoryBot.create(:service) }
-      it 'return service not valid' do
-        expect { service }.to raise_error(ActiveRecord::RecordInvalid)
-      end
-    end
+  describe 'relations' do
+    it('should have many engineers') { should have_many(:engineers) }
+    it('should have one contract ') { should have_one(:contract) }
+    it('should have many available hurs') { should have_many(:available_hours) }
+  end
+
+  describe 'valid instance of Service' do
+    it('return true') { expect(FactoryBot.build(:service).valid?).to be_truthy }
+    it('return false') { expect(FactoryBot.build(:service, company_name: nil).valid?).to be_falsey }
   end
 end
