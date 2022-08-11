@@ -27,7 +27,7 @@ class EngineerAvailableHour < ApplicationRecord
   end
 
   def self.records_by_service(service)
-    includes(:available_hour, :engineer).where(available_hour: { service_id: service.id}).load
+    includes(:available_hour, :engineer).where(available_hour: { service_id: service.id }).load
   end
 
   def self.update_time_availability(attrs)
