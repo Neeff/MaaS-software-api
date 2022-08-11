@@ -3,12 +3,14 @@ class AvailableHoursController < ApplicationController
 
   def index
     @available_hours = Availability::Hour.records(@service)
-    render 'index.json.jbuilder'
+  rescue StandardError => e
+    render_rescue(e)
   end
 
   def update
     @available_hour = Availability::Hour.update(available_hour_params)
-    render 'update.json.jbuilder'
+  rescue StandardError => e
+    render_rescue(e)
   end
 
   private
