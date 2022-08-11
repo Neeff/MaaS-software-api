@@ -1,4 +1,6 @@
 class Engineer < ApplicationRecord
+  validates :name, :color, presence: true
+
   belongs_to :service
   has_many :shifts, dependent: :destroy
   has_many :engineer_available_hours
