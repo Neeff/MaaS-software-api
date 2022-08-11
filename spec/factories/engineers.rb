@@ -1,7 +1,9 @@
+require 'faker'
+
 FactoryBot.define do
   factory :engineer do
-    name { "MyString" }
-    color { "MyString" }
-    service_id { nil }
+    association :service
+    name { Faker::Name.name }
+    color { Faker::Color.hex_color }
   end
 end

@@ -71,4 +71,14 @@ RSpec.describe Availability::Template do
       end
     end
   end
+
+  describe '#generate' do
+    it 'return collection of available hours' do
+      contract = FactoryBot.create(:contract, :all_days)
+      FactoryBot.create_list(:engineer, 3, service_id: contract.service_id)
+      data = Availability::Template.generate(contract)
+      expect(data).to be_instance_of(ActiveRecord::Import::Result)
+      expect(data.num_inserts).to eq(1)
+    end
+  end
 end

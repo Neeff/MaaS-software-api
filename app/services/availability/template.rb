@@ -1,6 +1,4 @@
-# module available hour logic
 module Availability
-  # class generate template
   class Template
     CURRENT_DATE = Date.today
     START_WEEK = CURRENT_DATE.beginning_of_week
@@ -17,12 +15,22 @@ module Availability
       @contract = contract
     end
 
+    def by_week
+      associate
+    end
+
     private
 
     attr_accessor :contract
 
-    def by_week
-      make_structure_by_day
+    def service
+      Service.find_by(id: contract.service_id)
+    end
+
+    def associate
+      structure = make_structure_by_day
+      AvailableHour.generate_available_hours(structure)
+      EngineerAvailableHour.generate_intemediate_relation(service)
     end
 
     def active_days
@@ -72,6 +80,10 @@ module Availability
       ((finish_weekend_hour - init_weekend_hour) / 1.hour).round
     end
 
+    def week
+      Time.now.strftime('%U').to_i
+    end
+
     def make_structure(hours, day, start_hour, end_hour)
       data = []
       hour = start_hour.hour
@@ -81,7 +93,8 @@ module Availability
                   service_id: contract.service_id,
                   description: description,
                   start_hour: start_hour.hour,
-                  end_hour: end_hour.hour }
+                  end_hour: end_hour.hour,
+                  week: week }
         hour += 1
       end
       data

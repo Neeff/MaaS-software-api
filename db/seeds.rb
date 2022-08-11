@@ -30,3 +30,5 @@ Contract.create(service_id: service.id,
 3.times do
   Engineer.create(name: Faker::Name.name, color: Faker::Color.hex_color, service_id: service.id)
 end
+
+Availability::Template.generate(service.contract)
