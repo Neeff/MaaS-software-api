@@ -9,6 +9,7 @@ class AvailableHoursController < ApplicationController
 
   def update
     @available_hour = Availability::Hour.update(available_hour_params)
+    Availability::Shift.new(@service).generate
   rescue StandardError => e
     render_rescue(e)
   end
