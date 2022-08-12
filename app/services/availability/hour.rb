@@ -4,6 +4,10 @@ module Availability
       new(service).records
     end
 
+    def self.shifts(service)
+      new(service).shifts
+    end
+
     def self.update(attrs)
       EngineerAvailableHour.update_time_availability(attrs)
     end
@@ -12,12 +16,16 @@ module Availability
       @service = service
     end
 
+    private
+
+    attr_accessor :service
+
     def records
       AvailableHour.records_by_service(service)
     end
 
-    private
-
-    attr_accessor :service
+    def shifts
+      AvailableHour.available_hours_shifts_by_service(service)
+    end
   end
 end
