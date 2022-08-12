@@ -7,6 +7,7 @@ class AvailableHour < ApplicationRecord
             presence: true
 
   belongs_to :service
+  has_one  :shift
   has_many :engineer_available_hours
   has_many :engineers, through: :engineer_available_hours
 
@@ -29,5 +30,9 @@ class AvailableHour < ApplicationRecord
 
   def self.available_hours_by_service(service)
     where(service_id: service.id)
+  end
+
+  def self.available_hours_shifts_by_service(service)
+    where(service_id: service.id).includes(shift: :engineer)
   end
 end

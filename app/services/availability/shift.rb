@@ -4,16 +4,22 @@ module Availability
       @service = service
     end
 
+    def generate
+      structure = assignments_hours
+      structure.map! { |data| data[:shift_structure] }
+      ::Shift.generate_shifts(structure)
+    end
+
+    private
+
+    attr_accessor :service
+
     def assignments_hours
       scheduler = ORTools::BasicScheduler.new(people: engineer_availability,
                                               shifts: shifts,
                                               maximum_hours_to_work: 8)
       scheduler.assignments
     end
-
-    private
-
-    attr_accessor :service
 
     def engineer_availability
       Engineer.available_hours_by_service(service).map do |engineer|
