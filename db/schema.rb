@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_11_015307) do
+ActiveRecord::Schema.define(version: 2022_08_12_091832) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,11 +67,14 @@ ActiveRecord::Schema.define(version: 2022_08_11_015307) do
 
   create_table "shifts", force: :cascade do |t|
     t.bigint "engineer_id", null: false
-    t.string "start_hour"
-    t.string "end_hour"
+    t.string "starts_at"
+    t.string "ends_at"
     t.date "date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "available_hour_id", null: false
+    t.boolean "active", default: true
+    t.index ["available_hour_id"], name: "index_shifts_on_available_hour_id"
     t.index ["engineer_id"], name: "index_shifts_on_engineer_id"
   end
 
@@ -80,5 +83,6 @@ ActiveRecord::Schema.define(version: 2022_08_11_015307) do
   add_foreign_key "engineer_available_hours", "available_hours"
   add_foreign_key "engineer_available_hours", "engineers"
   add_foreign_key "engineers", "services"
+  add_foreign_key "shifts", "available_hours"
   add_foreign_key "shifts", "engineers"
 end

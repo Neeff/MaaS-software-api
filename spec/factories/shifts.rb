@@ -1,8 +1,9 @@
 FactoryBot.define do
   factory :shift do
-    engineer_id { nil }
-    start_hour { "MyString" }
-    end_hour { "MyString" }
-    date { "2022-08-09" }
+    association :available_hour
+    association :engineer
+    starts_at { Time.now.to_s }
+    ends_at { Time.now.to_s }
+    date { '2022-08-09' }
   end
 end

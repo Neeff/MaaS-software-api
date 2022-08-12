@@ -7,6 +7,7 @@ class AvailableHour < ApplicationRecord
             presence: true
 
   belongs_to :service
+  has_one  :shift
   has_many :engineer_available_hours
   has_many :engineers, through: :engineer_available_hours
 
@@ -25,5 +26,13 @@ class AvailableHour < ApplicationRecord
     #       INNER JOIN engineers ON engineer_available_hours.engineer_id = engineers.id
     #       WHERE available_hours.service_id = #{service.id}"
     # ActiveRecord::Base.connection.execute(sql)
+  end
+
+  def self.available_hours_by_service(service)
+    where(service_id: service.id)
+  end
+
+  def self.available_hours_shifts_by_service(service)
+    where(service_id: service.id).includes(shift: :engineer)
   end
 end
