@@ -67,8 +67,8 @@ ActiveRecord::Schema.define(version: 2022_08_11_015307) do
 
   create_table "shifts", force: :cascade do |t|
     t.bigint "engineer_id", null: false
-    t.string "start_hour"
-    t.string "end_hour"
+    t.string "starts_at"
+    t.string "ends_at"
     t.date "date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

@@ -2,8 +2,8 @@ class CreateShifts < ActiveRecord::Migration[6.1]
   def change
     create_table :shifts do |t|
       t.references :engineer, null: false, foreign_key: true
-      t.string :start_hour
-      t.string :end_hour
+      t.string :starts_at
+      t.string :ends_at
       t.date :date
 
       t.timestamps

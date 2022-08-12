@@ -26,4 +26,8 @@ class AvailableHour < ApplicationRecord
     #       WHERE available_hours.service_id = #{service.id}"
     # ActiveRecord::Base.connection.execute(sql)
   end
+
+  def self.available_hours_by_service(service)
+    where(service_id: service.id)
+  end
 end
