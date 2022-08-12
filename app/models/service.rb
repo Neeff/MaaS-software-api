@@ -4,6 +4,7 @@ class Service < ApplicationRecord
   has_one :contract, dependent: :destroy
   has_many :engineers, dependent: :destroy
   has_many :available_hours, dependent: :destroy
+  has_many :shifts, through: :available_hours
 
   accepts_nested_attributes_for :engineers
 

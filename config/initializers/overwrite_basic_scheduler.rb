@@ -13,7 +13,8 @@ ORTools::BasicScheduler.class_eval do
           vars << { shift: i,
                     shift_structure: shift.merge({ date: shift[:starts_at].to_date,
                                                    engineer_id: person[:engineer_id],
-                                                   available_hour_id: shift[:available_hour_id]}),
+                                                   available_hour_id: shift[:available_hour_id],
+                                                   active: true }),
                     person: j,
                     var: model.new_bool_var("{shift: #{i}, person: #{j}}") }
         end

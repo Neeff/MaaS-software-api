@@ -1,5 +1,7 @@
 module Availability
   class Hour
+    attr_accessor :service
+
     def self.records(service)
       new(service).records
     end
@@ -15,10 +17,6 @@ module Availability
     def initialize(service)
       @service = service
     end
-
-    private
-
-    attr_accessor :service
 
     def records
       AvailableHour.records_by_service(service)

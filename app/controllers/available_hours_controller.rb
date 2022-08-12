@@ -16,7 +16,7 @@ class AvailableHoursController < ApplicationController
   private
 
   def set_service
-    @service = Service.find_by(params[:service_id])
+    @service = Service.find_by(id: params[:service_id])
   end
 
   def available_hour_params

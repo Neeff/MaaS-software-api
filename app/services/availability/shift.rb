@@ -5,6 +5,7 @@ module Availability
     end
 
     def generate
+      soft_delete
       structure = assignments_hours
       structure.map! { |data| data[:shift_structure] }
       ::Shift.generate_shifts(structure)
@@ -47,6 +48,10 @@ module Availability
 
     def number_of_engineers
       Engineer.count_by_service(service)
+    end
+
+    def soft_delete
+      service.shifts.update_all(active: false)
     end
   end
 end

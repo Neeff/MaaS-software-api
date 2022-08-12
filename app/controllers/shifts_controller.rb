@@ -1,14 +1,14 @@
 class ShiftsController < ApplicationController
   before_action :set_service
   def index
-    @available_hours = Availability::Hour.shifts(service)
+    @available_hours = Availability::Hour.shifts(@service)
   rescue StandardError => e
     render_rescue(e)
   end
 
   def update
     @available_hour = Availability::Hour.update(shift_params)
-    Availability::Shift.new(service).generate
+    Availability::Shift.new(@service).generate
   rescue StandardError => e
     render_rescue(e)
   end
