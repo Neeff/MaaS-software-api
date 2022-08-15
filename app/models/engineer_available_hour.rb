@@ -31,8 +31,14 @@ class EngineerAvailableHour < ApplicationRecord
   end
 
   def self.update_time_availability(attrs)
-    record = find_by(engineer_id: attrs[:engineer_id], available_hour_id: attrs[:available_hour_id])
-    record.update_columns(active: attrs[:active])
-    record.available_hour
+    return [] if attrs.empty?
+
+    updated_items = []
+    attrs.each do |attr|
+      record = find_by(engineer_id: attr[:available_hour][:engineer_id], available_hour_id: attr[:available_hour][:available_hour_id])
+      record.update_columns(active: attr[:available_hour][:active])
+      updated_items << record.available_hour
+    end
+    updated_items
   end
 end

@@ -1,1 +1,1 @@
-json.available_hour @available_hour, partial: 'available_hours/available_hour', as: :available_hour
+json.available_hours @available_hours, partial: 'available_hours/available_hour', as: :available_hour

@@ -8,7 +8,7 @@ class AvailableHoursController < ApplicationController
   end
 
   def update
-    @available_hour = Availability::Hour.update(available_hour_params)
+    @available_hours = Availability::Hour.update(available_hours_params)
     Availability::Shift.new(@service).generate
   rescue StandardError => e
     render_rescue(e)
@@ -20,7 +20,7 @@ class AvailableHoursController < ApplicationController
     @service = Service.find_by(id: params[:service_id])
   end
 
-  def available_hour_params
-    params.require(:available_hour).permit(AvailableHour.allowed_parameters)
+  def available_hours_params
+    params[:available_hours]
   end
 end
