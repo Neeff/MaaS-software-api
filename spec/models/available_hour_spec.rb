@@ -21,7 +21,7 @@ RSpec.describe AvailableHour, type: :model do
     it 'return hours available and shift' do
       engineer
       shift
-      data = subject.available_hours_shifts_by_service(service)
+      data = subject.available_hours_shifts_by_service(service, available_hour.week)
       expect(data.first).to be_instance_of(AvailableHour)
       expect(data.first.shift).to eq(shift)
     end
