@@ -4,7 +4,8 @@ RSpec.describe Availability::Template do
   describe '#active_days' do
     context 'when contract have all days of week' do
       contract = FactoryBot.create(:contract, :all_days)
-      let(:subject) { described_class.new(contract) }
+      let(:date) { Date.today }
+      let(:subject) { described_class.new(contract, date) }
       it 'return array' do
         expect(subject.send(:active_days)).to be_instance_of(Array)
       end
@@ -22,7 +23,8 @@ RSpec.describe Availability::Template do
 
     context 'when contract does not have weekends' do
       contract = FactoryBot.create(:contract, :no_weekends)
-      let(:subject) { described_class.new(contract) }
+      let(:date) { Date.today }
+      let(:subject) { described_class.new(contract, date) }
       it 'return array' do
         expect(subject.send(:active_days)).to be_instance_of(Array)
       end
@@ -40,7 +42,8 @@ RSpec.describe Availability::Template do
   describe '#days' do
     context 'when contract have all days of week' do
       contract = FactoryBot.create(:contract, :all_days)
-      let(:subject) { described_class.new(contract) }
+      let(:date) { Date.today }
+      let(:subject) { described_class.new(contract, date) }
 
       it 'return array with object dates' do
         expect(subject.send(:days).count).to eq(7)
@@ -50,7 +53,8 @@ RSpec.describe Availability::Template do
 
     context 'when contract does not have weekends' do
       contract = FactoryBot.create(:contract, :no_weekends)
-      let(:subject) { described_class.new(contract) }
+      let(:date) { Date.today }
+      let(:subject) { described_class.new(contract, date) }
 
       it 'return array with object dates' do
         expect(subject.send(:days).count).to eq(5)
@@ -62,7 +66,8 @@ RSpec.describe Availability::Template do
   describe '#make_structure_by_day' do
     context 'when contract have n days' do
       contract = FactoryBot.create(:contract, :all_days)
-      let(:subject) { described_class.new(contract) }
+      let(:date) { Date.today }
+      let(:subject) { described_class.new(contract, date) }
 
       it 'return structure available hours' do
         data = subject.send(:make_structure_by_day)
@@ -73,10 +78,11 @@ RSpec.describe Availability::Template do
   end
 
   describe '#generate' do
+    let(:date) { Date.today }
     it 'return collection of available hours' do
       contract = FactoryBot.create(:contract, :all_days)
       FactoryBot.create_list(:engineer, 3, service_id: contract.service_id)
-      data = Availability::Template.generate(contract)
+      data = Availability::Template.generate(contract, date)
       expect(data).to be_instance_of(ActiveRecord::Import::Result)
       expect(data.num_inserts).to eq(1)
     end

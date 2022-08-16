@@ -23,8 +23,8 @@ RSpec.describe EngineerAvailableHour, type: :model do
     let(:subject) { described_class }
     it 'return array of ids' do
       available_hour
-      expect(subject.available_hours(service)).to be_instance_of(Array)
-      expect(subject.available_hours(service).first).to eq(available_hour.id)
+      expect(subject.available_hours(service, available_hour.week)).to be_instance_of(Array)
+      expect(subject.available_hours(service, available_hour.week).first).to eq(available_hour.id)
     end
   end
 
@@ -43,33 +43,33 @@ RSpec.describe EngineerAvailableHour, type: :model do
 
   describe '.records_by_service' do
     let(:service) { FactoryBot.create(:service) }
-    let(:available_hour_id) { FactoryBot.create(:available_hour, service_id: service.id, week: Time.now.strftime('%U').to_i).id }
+    let(:available_hour) { FactoryBot.create(:available_hour, service_id: service.id, week: Time.now.strftime('%U').to_i) }
     let(:engineer_id) { FactoryBot.create(:engineer, service_id: service.id).id }
     let(:engineer_available_hour) do
       FactoryBot.create(:engineer_available_hour,
                         engineer_id: engineer_id,
-                        available_hour_id: available_hour_id )
+                        available_hour_id: available_hour.id)
     end
     let(:subject) { described_class }
     it 'return ActiveRecordCollection' do
       engineer_available_hour
-      expect(subject.records_by_service(service).empty?).to be_falsey
+      expect(subject.records_by_service(service, available_hour.week).empty?).to be_falsey
     end
   end
 
-  describe '.updat_time_availability' do
+  describe '.update_time_availability' do
     let(:service) { FactoryBot.create(:service) }
     let(:available_hour_id) { FactoryBot.create(:available_hour, service_id: service.id, week: Time.now.strftime('%U').to_i).id }
     let(:engineer_id) { FactoryBot.create(:engineer, service_id: service.id).id }
     let(:engineer_available_hour) do
       FactoryBot.create(:engineer_available_hour,
                         engineer_id: engineer_id,
-                        available_hour_id: available_hour_id )
+                        available_hour_id: available_hour_id)
     end
     let(:subject) { described_class }
     it('return active true') do
       engineer_available_hour
-      attrs = { available_hour_id: available_hour_id, engineer_id: engineer_id, active: true }
+      attrs = [{ available_hour: { available_hour_id: available_hour_id, engineer_id: engineer_id, active: true } }]
       expect(engineer_available_hour.active).to be_falsey
       subject.update_time_availability(attrs)
       engineer_available_hour.reload
