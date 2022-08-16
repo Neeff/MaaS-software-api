@@ -1,6 +1,7 @@
 module Availability
   class Shift
-    def initialize(service)
+    def initialize(service, week)
+      @week = week.presence || Time.now.strftime('%U').to_i
       @service = service
     end
 
@@ -13,7 +14,7 @@ module Availability
 
     private
 
-    attr_accessor :service
+    attr_accessor :service, :week
 
     def assignments_hours
       scheduler = ORTools::BasicScheduler.new(people: engineer_availability,
@@ -23,7 +24,7 @@ module Availability
     end
 
     def engineer_availability
-      Engineer.available_hours_by_service(service).map do |engineer|
+      Engineer.available_hours_by_service(service, week).map do |engineer|
         { availability: engineer.available_hours_struct,
           engineer_id: engineer.id,
           max_hours: average_hours }
@@ -39,7 +40,7 @@ module Availability
     end
 
     def available_hours
-      AvailableHour.available_hours_by_service(service)
+      AvailableHour.available_hours_by_service(service, week)
     end
 
     def average_hours
@@ -51,7 +52,7 @@ module Availability
     end
 
     def soft_delete
-      service.shifts.update_all(active: false)
+      service.shifts.includes(:available_hours).where(available_hours: { week: week }).update_all(active: false)
     end
   end
 end

@@ -1,5 +1,5 @@
 class Engineer < ApplicationRecord
-  validates :name, :color, presence: true
+  validates :name, presence: true
 
   belongs_to :service
   has_many :shifts, dependent: :destroy
@@ -8,8 +8,8 @@ class Engineer < ApplicationRecord
 
   after_commit :assign_color, on: :create
 
-  def self.available_hours_by_service(service)
-    includes(:available_hours).where(available_hours: { service_id: service.id }, engineer_available_hours: { active: true} )
+  def self.available_hours_by_service(service, week)
+    includes(:available_hours).where(available_hours: { service_id: service.id, week: week }, engineer_available_hours: { active: true } )
   end
 
   def self.count_by_service(service)

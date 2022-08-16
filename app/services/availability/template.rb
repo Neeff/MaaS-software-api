@@ -1,17 +1,20 @@
 module Availability
   class Template
-    CURRENT_DATE = Date.today
-    START_WEEK = CURRENT_DATE.beginning_of_week
-    END_WEEK = CURRENT_DATE.end_of_week
-    private_constant :CURRENT_DATE
-    private_constant :START_WEEK
-    private_constant :END_WEEK
 
-    def self.generate(contract)
-      new(contract).by_week
+    def self.massive(today, five_weeks_to_future, contract)
+      (today..five_weeks_to_future).to_a.select(&:monday?).each do |date|
+        generate(contract, date)
+      end
     end
 
-    def initialize(contract)
+    def self.generate(contract, date)
+      new(contract, date).by_week
+    end
+
+    def initialize(contract, date)
+      @date = date
+      @start_week = date.beginning_of_week
+      @end_week = date.end_of_week
       @contract = contract
     end
 
@@ -21,7 +24,7 @@ module Availability
 
     private
 
-    attr_accessor :contract
+    attr_accessor :contract, :date, :start_week, :end_week
 
     def service
       Service.find_by(id: contract.service_id)
@@ -30,7 +33,7 @@ module Availability
     def associate
       structure = make_structure_by_day
       AvailableHour.generate_available_hours(structure)
-      EngineerAvailableHour.generate_intemediate_relation(service)
+      EngineerAvailableHour.generate_intemediate_relation(service, week)
     end
 
     def active_days
@@ -47,7 +50,7 @@ module Availability
 
     def hash_days
       hash_days = Hash.new(:UNPROCESSABLE)
-      (START_WEEK..END_WEEK).to_a.map { |day| hash_days[day.strftime('%A').downcase] = day }
+      (start_week..end_week).to_a.map { |day| hash_days[day.strftime('%A').downcase] = day }
       hash_days
     end
 
@@ -81,7 +84,7 @@ module Availability
     end
 
     def week
-      Time.now.strftime('%U').to_i
+      date.to_time.strftime('%U').to_i
     end
 
     def make_structure(hours, day, start_hour, end_hour)

@@ -5,9 +5,9 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+Engineer.all.delete_all
 Shift.all.delete_all
 EngineerAvailableHour.all.delete_all
-Engineer.all.delete_all
 AvailableHour.all.delete_all
 Contract.all.delete_all
 Service.all.delete_all
@@ -31,4 +31,9 @@ Contract.create(service_id: service.id,
   Engineer.create(name: Faker::Name.name, color: Faker::Color.hex_color, service_id: service.id)
 end
 
-Availability::Template.generate(service.contract)
+today = Date.today.beginning_of_week
+five_weeks_to_future = today + 5.week
+
+(today..five_weeks_to_future).to_a.select(&:monday?).each do |date|
+  Availability::Template.generate(service.contract, date)
+end

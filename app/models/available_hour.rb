@@ -19,20 +19,15 @@ class AvailableHour < ApplicationRecord
     AvailableHour.import(structure, validate: false)
   end
 
-  def self.records_by_service(service)
-    where(service_id: service.id).includes(engineers: :engineer_available_hours).load
-    # sql = "SELECT * FROM  available_hours INNER JOIN engineer_available_hours
-    #       ON engineer_available_hours.available_hour_id = available_hours.id
-    #       INNER JOIN engineers ON engineer_available_hours.engineer_id = engineers.id
-    #       WHERE available_hours.service_id = #{service.id}"
-    # ActiveRecord::Base.connection.execute(sql)
+  def self.records_by_service(service, week)
+    where(service_id: service.id, week: week).includes(engineers: :engineer_available_hours).load
   end
 
-  def self.available_hours_by_service(service)
-    where(service_id: service.id)
+  def self.available_hours_by_service(service, week)
+    where(service_id: service.id, week: week)
   end
 
-  def self.available_hours_shifts_by_service(service)
-    where(service_id: service.id).includes(shift: :engineer)
+  def self.available_hours_shifts_by_service(service, week)
+    where(service_id: service.id, week: week).includes(shift: :engineer)
   end
 end
